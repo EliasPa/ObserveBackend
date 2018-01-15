@@ -1,0 +1,4 @@
+{
+	"name": "Weather observation application",
+	"description": "A tool for observing weather"
+}
