@@ -224,6 +224,10 @@ function checkInputValidity(data) {
     return true
 }
 
+function getMessage(callback) {
+    callback({message: 'Hello'})
+}
+
 module.exports = {
     saveTemperature,
     getTemperature,
@@ -232,5 +236,6 @@ module.exports = {
     getCoordinates,
     getLocationCoordinates,
     getLocations,
-    getHottestAndColdest
+    getHottestAndColdest,
+    getMessage
 }
