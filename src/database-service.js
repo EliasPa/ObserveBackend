@@ -6,6 +6,7 @@ function saveTemperature(data, callback) {
     if (checkInputValidity(data)) {
         var observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
         observation.save().then(function() {
+            console.log('saved!')
             callback({ message: 'ok', code: 200 })
         }).catch(function(err){
             if (err.response && err.response.code === 500) {
@@ -74,6 +75,7 @@ function getMaxAndMin(callback) {
 }
 
 function getTemps(callback) {
+    console.log('attempted to get temperatures')
     models.Observation.aggregate([{ $group: { _id: '$location', temp: { $last: '$temperature' } } }],
         function (err, result) {
             if (err) {
@@ -92,6 +94,7 @@ function getTemps(callback) {
                     getMaxAndMin(function(response){
                         var criticalPoints = response.criticalPoints
                         parseFinalData(criticalPoints, data, function(final_data){
+                            console.log('final_data')                            
                             callback({ weatherData: final_data, code: response.code })
                         })
                     })
@@ -220,6 +223,7 @@ function checkInputValidity(data) {
     var location = data.location
     var temperature = data.temperature
     if (location === '' || isNaN(temperature) || temperature === '') {
+        console.log('not valid data')
         return false
     }
     return true

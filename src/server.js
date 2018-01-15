@@ -21,6 +21,8 @@ app.use(express.static(__dirname + '/'))
 //app.use(cors())
 app.use(express.json())
 
+console.log(process.env.MONGOLAB_URI)
+
 // Set up the mongoose module.
 var mURI = process.env.MONGOLAB_URI || 'mongodb://localhost:27017/weatherDB' // check whether we have env variables or not and act accordingly.
 mongoose.Promise = global.Promise
