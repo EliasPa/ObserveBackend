@@ -1,11 +1,11 @@
-var mongoose = require('mongoose')
-var models = require('./models.js')
-var locations = require('./locations.js').locations
+let mongoose = require('mongoose')
+let models = require('./models.js')
+let locations = require('./locations.js').locations
 
 function saveTemperature(data, callback) {
     checkInputValidity(data, function (response) {
         if (response.success) {
-            var observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
+            let observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
             observation.save().then(function () {
                 callback({ message: 'ok', code: 200 })
             }).catch(function (err) {
@@ -40,7 +40,7 @@ function getTemperature(data, callback) {
 }
 
 function getDateDayAgo() {
-    var day_ago = new Date().getTime() - 24 * 3600000
+    let day_ago = new Date().getTime() - 24 * 3600000
     return new Date(day_ago)
 }
 
@@ -58,11 +58,11 @@ function getMaxAndMin(callback) {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
-            var data = new Map()
-            var containedLocations = []
-            for (var i = 0; i < result.length; i++) {
-                var el = result[i];
-                var json = {
+            let data = new Map()
+            let containedLocations = []
+            for (let i = 0; i < result.length; i++) {
+                let el = result[i];
+                let json = {
                     max: el.max,
                     min: el.min
                 }
@@ -84,10 +84,10 @@ function getTemps(callback) {
             if (err) {
                 callback({ error: 'Internal error', code: 500 })
             } else {
-                var data = new Map()
-                var containedLocations = []
-                for (var i = 0; i < result.length; i++) {
-                    var el = result[i]
+                let data = new Map()
+                let containedLocations = []
+                for (let i = 0; i < result.length; i++) {
+                    let el = result[i]
                     data.set(el._id, el.temp)
 
                 }
@@ -95,7 +95,7 @@ function getTemps(callback) {
                     callback({ code: 201 })
                 } else {
                     getMaxAndMin(function (response) {
-                        var criticalPoints = response.criticalPoints
+                        let criticalPoints = response.criticalPoints
                         parseFinalData(criticalPoints, data, function (final_data) {
                             console.log('final_data')
                             callback({ weatherData: final_data, code: response.code })
@@ -108,13 +108,13 @@ function getTemps(callback) {
 
 function parseFinalData(criticalPoints, data, callback) {
     getLocations(function (response) {
-        var locations = response.locations
-        var final_data = []
+        let locations = response.locations
+        let final_data = []
 
-        for (var i = 0; i < locations.length; i++) {
-            var location = locations[i]
-            var cp = { max: '-', min: '-' }
-            var temp = '-'
+        for (let i = 0; i < locations.length; i++) {
+            let location = locations[i]
+            let cp = { max: '-', min: '-' }
+            let temp = '-'
 
             if (criticalPoints.has(location)) {
                 cp = criticalPoints.get(location)
@@ -122,7 +122,7 @@ function parseFinalData(criticalPoints, data, callback) {
             if (data.has(location)) {
                 temp = data.get(location)
             }
-            var row = {
+            let row = {
                 location: location,
                 temperature: temp,
                 max: cp.max,
@@ -150,10 +150,10 @@ function getHottestAndColdest(callback) {
         if (err) {
             throw err
         } else {
-            var data = []
-            for (var i = 0; i < result.length; i++) {
-                var el = result[i];
-                var json = {
+            let data = []
+            for (let i = 0; i < result.length; i++) {
+                let el = result[i];
+                let json = {
                     location: el._id,
                     temperature: el.last
                 }
@@ -184,10 +184,10 @@ function getCoordinates(callback) {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
-            var data = []
-            for (var i = 0; i < docs.length; i++) {
-                var el = docs[i];
-                var coord = [el.lat, el.lon]
+            let data = []
+            for (let i = 0; i < docs.length; i++) {
+                let el = docs[i];
+                let coord = [el.lat, el.lon]
                 data.push(coord)
             }
             callback({ coordinates: data, code: 200 })
@@ -200,10 +200,10 @@ function getLocations(callback) {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
-            var data = []
-            for (var i = 0; i < docs.length; i++) {
-                var el = docs[i];
-                var location = el.name
+            let data = []
+            for (let i = 0; i < docs.length; i++) {
+                let el = docs[i];
+                let location = el.name
                 data.push(location)
             }
             callback({ locations: data, code: 200 })
@@ -223,10 +223,10 @@ function getLocationCoordinates(data, callback) {
 }
 
 function checkInputValidity(data, callback) {
-    var location = data.location
-    var temperature = data.temperature
+    let location = data.location
+    let temperature = data.temperature
     getLocations(function (response) {
-        var locations = response.locations
+        let locations = response.locations
         if (
             locations.indexOf(location) === -1
             || location === ''
