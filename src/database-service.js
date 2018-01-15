@@ -224,6 +224,7 @@ function checkInputValidity(data) {
     var temperature = data.temperature
     if (location === '' || isNaN(temperature) || temperature === '') {
         console.log('not valid data')
+        
         return false
     }
     return true
