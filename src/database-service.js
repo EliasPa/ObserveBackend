@@ -16,7 +16,7 @@ function saveTemperature(data, callback) {
                 }
             })
         } else {
-            callback({error: response.message, code: 501})
+            callback({ error: response.message, code: 501 })
         }
     })
 }
@@ -227,7 +227,15 @@ function checkInputValidity(data, callback) {
     var temperature = data.temperature
     getLocations(function (response) {
         var locations = response.locations
-        if (locations.indexOf(location) === -1 || location === '' || isNaN(temperature) || temperature === '' || temperature == null) {
+        if (
+            locations.indexOf(location) === -1
+            || location === ''
+            || isNaN(temperature)
+            || temperature === ''
+            || temperature == null
+            || temperature > 200
+            || temperature < -200
+        ) {
             callback({ success: false, message: 'Input data not valid.' })
         } else {
             callback({ success: true })
