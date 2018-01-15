@@ -3,19 +3,22 @@ var models = require('./models.js')
 var locations = require('./locations.js').locations
 
 function saveTemperature(data, callback) {
-    if (checkInputValidity(data)) {
-        var observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
-        observation.save().then(function() {
-            console.log('saved!')
-            callback({ message: 'ok', code: 200 })
-        }).catch(function(err){
-            if (err.response && err.response.code === 500) {
-                callback({ error: 'Internal server error, sorry' + err.response.error, code: 500 })
-            } else {
-                callback({ error: 'Unhandled error.', code: err.response.code })
-            }
-        })
-    }
+    checkInputValidity(data, function (response) {
+        if (response.success) {
+            var observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
+            observation.save().then(function () {
+                callback({ message: 'ok', code: 200 })
+            }).catch(function (err) {
+                if (err.response && err.response.code === 500) {
+                    callback({ error: 'Internal server error, sorry' + err.response.error, code: 500 })
+                } else {
+                    callback({ error: 'Unhandled error.', code: err.response.code })
+                }
+            })
+        } else {
+            callback({error: response.message, code: 501})
+        }
+    })
 }
 
 
@@ -91,10 +94,10 @@ function getTemps(callback) {
                 if (data.length === 0) {
                     callback({ code: 201 })
                 } else {
-                    getMaxAndMin(function(response){
+                    getMaxAndMin(function (response) {
                         var criticalPoints = response.criticalPoints
-                        parseFinalData(criticalPoints, data, function(final_data){
-                            console.log('final_data')                            
+                        parseFinalData(criticalPoints, data, function (final_data) {
+                            console.log('final_data')
                             callback({ weatherData: final_data, code: response.code })
                         })
                     })
@@ -104,7 +107,7 @@ function getTemps(callback) {
 }
 
 function parseFinalData(criticalPoints, data, callback) {
-    getLocations(function(response) {
+    getLocations(function (response) {
         var locations = response.locations
         var final_data = []
 
@@ -113,10 +116,10 @@ function parseFinalData(criticalPoints, data, callback) {
             var cp = { max: '-', min: '-' }
             var temp = '-'
 
-            if (criticalPoints.has(location)){
+            if (criticalPoints.has(location)) {
                 cp = criticalPoints.get(location)
             }
-            if (data.has(location)){
+            if (data.has(location)) {
                 temp = data.get(location)
             }
             var row = {
@@ -219,19 +222,21 @@ function getLocationCoordinates(data, callback) {
     })
 }
 
-function checkInputValidity(data) {
+function checkInputValidity(data, callback) {
     var location = data.location
     var temperature = data.temperature
-    if (location === '' || isNaN(temperature) || temperature === '' || temperature == null) {
-        console.log('not valid data')
-        
-        return false
-    }
-    return true
+    getLocations(function (response) {
+        var locations = response.locations
+        if (locations.indexOf(location) === -1 || location === '' || isNaN(temperature) || temperature === '' || temperature == null) {
+            callback({ success: false, message: 'Input data not valid.' })
+        } else {
+            callback({ success: true })
+        }
+    })
 }
 
 function getMessage(callback) {
-    callback({message: 'Hello'})
+    callback({ message: 'Hello' })
 }
 
 module.exports = {
