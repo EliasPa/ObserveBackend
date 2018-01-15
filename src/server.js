@@ -1,4 +1,4 @@
-var express = require('express'),
+const express = require('express'),
     app = express(),
     server = require('http').createServer(app),
     mongoose = require('mongoose'),
@@ -9,25 +9,20 @@ var express = require('express'),
     bodyParser = require('body-parser'),
     serveStatic = require('serve-static')
 
-    server.listen(process.env.PORT || 3000)
+server.listen(process.env.PORT || 3000)
 
-//app.use(serveStatic(__dirname + "/dist"));
-app.use(function(req, res, next) {
+app.use(function (req, res, next) {
     res.header("Access-Control-Allow-Origin", "*")
     res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept")
     next()
 });
 app.use(express.static(__dirname + '/'))
-//app.use(cors())
 app.use(express.json())
 
-console.log('mongo_uri: ' + process.env.MONGODB_URI)
-console.log(process.env.NODE_ENV)
-
 // Set up the mongoose module.
-var mURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/weatherDB' // check whether we have env variables or not and act accordingly.
+const mURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/weatherDB' // check whether we have env variables or not and act accordingly.
 mongoose.Promise = global.Promise
-mongoose.connect(mURI, function (error) {
+mongoose.connect(mURI, (error) => {
     if (error) console.log('error connecting to database')
     else console.log('mongo succeeded')
 })

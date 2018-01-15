@@ -1,5 +1,5 @@
-var router = require('express').Router()
-var service = require('./database-service.js')
+let router = require('express').Router()
+let service = require('./database-service.js')
 
 /*
     Purpose: used for getting temperature data,
@@ -14,8 +14,8 @@ var service = require('./database-service.js')
             code: 500
         }
 */
-router.get('/temperatures', function (req, res) {
-    service.getTemps(function(response){
+router.get('/temperatures', (req, res) => {
+    service.getTemps((response) => {
         res.send(response)
     })
 })
@@ -40,8 +40,8 @@ router.get('/temperatures', function (req, res) {
             code: 500
         }
 */
-router.get('/location', function (req, res) {
-    service.getHottestAndColdest(function(response) {
+router.get('/location', (req, res) => {
+    service.getHottestAndColdest((response) => {
         res.send(response)
     })
 })
@@ -60,7 +60,7 @@ router.get('/location', function (req, res) {
         }
 */
 router.get('/coordinates', function (req, res) {
-    service.getCoordinates(function(response) {
+    service.getCoordinates(function (response) {
         res.send(response)
     })
 })
@@ -78,8 +78,8 @@ router.get('/coordinates', function (req, res) {
             code: 500
         }
 */
-router.get('/locations', function (req, res) {
-    service.getLocations(function(response) {
+router.get('/locations', (req, res) => {
+    service.getLocations((response) => {
         res.send(response)
     })
 })
@@ -97,8 +97,8 @@ router.get('/locations', function (req, res) {
         code: 500
     }
 */
-router.post('/locationCoordinates', function (req, res) {
-    service.getLocationCoordinates(req.body, function(response) {
+router.post('/locationCoordinates', (req, res) => {
+    service.getLocationCoordinates(req.body, (response) => {
         res.send(response)
     })
 })
@@ -118,8 +118,8 @@ router.post('/locationCoordinates', function (req, res) {
             code: 500
         }
 */
-router.post('/', function (req, res) {
-    service.saveTemperature(req.body, function(response) {
+router.post('/', (req, res) => {
+    service.saveTemperature(req.body, (response) => {
         res.json(response)
     })
 })

@@ -3,12 +3,12 @@ let models = require('./models.js')
 let locations = require('./locations.js').locations
 
 function saveTemperature(data, callback) {
-    checkInputValidity(data, function (response) {
+    checkInputValidity(data, (response) => {
         if (response.success) {
             let observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
-            observation.save().then(function () {
+            observation.save().then(() => {
                 callback({ message: 'ok', code: 200 })
-            }).catch(function (err) {
+            }).catch((err) => {
                 if (err.response && err.response.code === 500) {
                     callback({ error: 'Internal server error, sorry' + err.response.error, code: 500 })
                 } else {
@@ -34,7 +34,7 @@ function getTemperature(data, callback) {
                 $min: '$temperature'
             }
         }
-    }, function (err, docs) {
+    }, (err, docs) => {
         callback({ max: docs.max, min: docs.min })
     })
 }
@@ -54,7 +54,7 @@ function getMaxAndMin(callback) {
         }
     },
     { $sort: { max: -1 } }
-    ], function (err, result) {
+    ], (err, result) => {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
@@ -80,7 +80,7 @@ function getMaxAndMin(callback) {
 function getTemps(callback) {
     console.log('attempted to get temperatures')
     models.Observation.aggregate([{ $group: { _id: '$location', temp: { $last: '$temperature' } } }],
-        function (err, result) {
+        (err, result) => {
             if (err) {
                 callback({ error: 'Internal error', code: 500 })
             } else {
@@ -94,9 +94,9 @@ function getTemps(callback) {
                 if (data.length === 0) {
                     callback({ code: 201 })
                 } else {
-                    getMaxAndMin(function (response) {
+                    getMaxAndMin((response) => {
                         let criticalPoints = response.criticalPoints
-                        parseFinalData(criticalPoints, data, function (final_data) {
+                        parseFinalData(criticalPoints, data, (final_data) => {
                             console.log('final_data')
                             callback({ weatherData: final_data, code: response.code })
                         })
@@ -107,7 +107,7 @@ function getTemps(callback) {
 }
 
 function parseFinalData(criticalPoints, data, callback) {
-    getLocations(function (response) {
+    getLocations((response) => {
         let locations = response.locations
         let final_data = []
 
@@ -146,7 +146,7 @@ function getHottestAndColdest(callback) {
     {
         $sort: { last: -1 }
     }
-    ], function (err, result) {
+    ], (err, result) => {
         if (err) {
             throw err
         } else {
@@ -180,7 +180,7 @@ function getHottestAndColdest(callback) {
 }
 
 function getCoordinates(callback) {
-    models.Locations.find({}, function (err, docs) {
+    models.Locations.find({}, (err, docs) => {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
@@ -196,7 +196,7 @@ function getCoordinates(callback) {
 }
 
 function getLocations(callback) {
-    models.Locations.find({}, function (err, docs) {
+    models.Locations.find({}, (err, docs) => {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
@@ -213,7 +213,7 @@ function getLocations(callback) {
 
 function getLocationCoordinates(data, callback) {
     console.log(data)
-    models.Locations.findOne({ name: data.name }, function (err, doc) {
+    models.Locations.findOne({ name: data.name }, (err, doc) => {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
         } else {
@@ -225,7 +225,7 @@ function getLocationCoordinates(data, callback) {
 function checkInputValidity(data, callback) {
     let location = data.location
     let temperature = data.temperature
-    getLocations(function (response) {
+    getLocations((response) => {
         let locations = response.locations
         if (
             locations.indexOf(location) === -1
