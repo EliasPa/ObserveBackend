@@ -9,7 +9,7 @@ function saveTemperature(data, callback) {
             callback({ message: 'ok', code: 200 })
         }).catch(function(err){
             if (err.response && err.response.code === 500) {
-                callback({ error: 'Internal server error' + err.response.error, code: 500 })
+                callback({ error: 'Internal server error, sorry' + err.response.error, code: 500 })
             } else {
                 callback({ error: 'Unhandled error.', code: err.response.code })
             }
