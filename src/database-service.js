@@ -206,6 +206,7 @@ function getLocations(callback) {
 }
 
 function getLocationCoordinates(data, callback) {
+    console.log(data)
     models.Locations.findOne({ name: data.name }, function (err, doc) {
         if (err) {
             callback({ error: 'Internal error', code: 500 })
@@ -218,7 +219,7 @@ function getLocationCoordinates(data, callback) {
 function checkInputValidity(data) {
     var location = data.location
     var temperature = data.temperature
-    if (location.length === 0 || isNaN(temperature) || temperature === '') {
+    if (location === '' || isNaN(temperature) || temperature === '') {
         return false
     }
     return true
