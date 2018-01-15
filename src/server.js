@@ -21,10 +21,11 @@ app.use(express.static(__dirname + '/'))
 //app.use(cors())
 app.use(express.json())
 
-console.log("mongo_uri: " + process.env.MONGOLAB_URI)
+console.log('mongo_uri: ' + process.env.MONGODB_URI)
+console.log(process.env.NODE_ENV)
 
 // Set up the mongoose module.
-var mURI = process.env.MONGODB_URI// || 'mongodb://localhost:27017/weatherDB' // check whether we have env variables or not and act accordingly.
+var mURI = process.env.MONGODB_URI || 'mongodb://localhost:27017/weatherDB' // check whether we have env variables or not and act accordingly.
 mongoose.Promise = global.Promise
 mongoose.connect(mURI, function (error) {
     if (error) console.log('error connecting to database')
