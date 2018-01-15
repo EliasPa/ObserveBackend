@@ -1,5 +1,5 @@
-let router = require('express').Router()
-const service = require('./database-service.js')
+var router = require('express').Router()
+var service = require('./database-service.js')
 
 /*
     Purpose: used for getting temperature data,
@@ -15,7 +15,7 @@ const service = require('./database-service.js')
         }
 */
 router.get('/temperatures', function (req, res) {
-    service.getTemps((response) => {
+    service.getTemps(function(response){
         res.send(response)
     })
 })
@@ -41,7 +41,7 @@ router.get('/temperatures', function (req, res) {
         }
 */
 router.get('/location', function (req, res) {
-    service.getHottestAndColdest((response) => {
+    service.getHottestAndColdest(function(response) {
         res.send(response)
     })
 })
@@ -60,7 +60,7 @@ router.get('/location', function (req, res) {
         }
 */
 router.get('/coordinates', function (req, res) {
-    service.getCoordinates((response) => {
+    service.getCoordinates(function(response) {
         res.send(response)
     })
 })
@@ -79,7 +79,7 @@ router.get('/coordinates', function (req, res) {
         }
 */
 router.get('/locations', function (req, res) {
-    service.getLocations((response) => {
+    service.getLocations(function(response) {
         res.send(response)
     })
 })
@@ -98,7 +98,7 @@ router.get('/locations', function (req, res) {
     }
 */
 router.post('/locationCoordinates', function (req, res) {
-    service.getLocationCoordinates(req.body, (response) => {
+    service.getLocationCoordinates(req.body, function(response) {
         res.send(response)
     })
 })
@@ -119,8 +119,7 @@ router.post('/locationCoordinates', function (req, res) {
         }
 */
 router.post('/', function (req, res) {
-    service.saveTemperature(req.body, (response) => {
-        console.log(response)
+    service.saveTemperature(req.body, function(response) {
         res.json(response)
     })
 })

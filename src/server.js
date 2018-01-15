@@ -12,7 +12,7 @@ var express = require('express'),
     server.listen(process.env.PORT || 3000)
 
 //app.use(serveStatic(__dirname + "/dist"));
-//app.use(express.static(__dirname + '/'))
+app.use(express.static(__dirname + '/'))
 app.use(cors())
 app.use(express.json())
 

@@ -1,4 +1,4 @@
-const locations = [
+var locations = [
     {
         name: 'Tokio',
         coords: { lon: '35.6584421', lat: '139.7328635' }
