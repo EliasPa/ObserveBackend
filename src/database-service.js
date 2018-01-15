@@ -222,7 +222,7 @@ function getLocationCoordinates(data, callback) {
 function checkInputValidity(data) {
     var location = data.location
     var temperature = data.temperature
-    if (location === '' || isNaN(temperature) || temperature === '') {
+    if (location === '' || isNaN(temperature) || temperature === '' || temperature == null) {
         console.log('not valid data')
         
         return false
