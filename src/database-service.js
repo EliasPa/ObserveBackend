@@ -1,9 +1,10 @@
 let mongoose = require('mongoose')
 let models = require('./models.js')
 let locations = require('./locations.js').locations
+let helper = require('./helper.js')
 
 function saveTemperature(data, callback) {
-    checkInputValidity(data, (response) => {
+    helper.checkInputValidity(data, (response) => {
         if (response.success) {
             let observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
             observation.save().then(() => {
@@ -21,31 +22,8 @@ function saveTemperature(data, callback) {
     })
 }
 
-
-
-function getTemperature(data, callback) {
-    models.Observation.aggregate({
-        $group: {
-            _id: '',
-            max: {
-                $max: '$temperature',
-            },
-            min: {
-                $min: '$temperature'
-            }
-        }
-    }, (err, docs) => {
-        callback({ max: docs.max, min: docs.min })
-    })
-}
-
-function getDateDayAgo() {
-    let day_ago = new Date().getTime() - 24 * 3600000
-    return new Date(day_ago)
-}
-
 function getMaxAndMin(callback) {
-    models.Observation.aggregate([{ $match: { date: { $gt: getDateDayAgo() } } },
+    models.Observation.aggregate([{ $match: { date: { $gt: helper.getDateDayAgo() } } },
     {
         $group: {
             _id: '$location',
@@ -78,7 +56,6 @@ function getMaxAndMin(callback) {
 }
 
 function getTemps(callback) {
-    console.log('attempted to get temperatures')
     models.Observation.aggregate([{ $group: { _id: '$location', temp: { $last: '$temperature' } } }],
         (err, result) => {
             if (err) {
@@ -97,7 +74,6 @@ function getTemps(callback) {
                     getMaxAndMin((response) => {
                         let criticalPoints = response.criticalPoints
                         parseFinalData(criticalPoints, data, (final_data) => {
-                            console.log('final_data')
                             callback({ weatherData: final_data, code: response.code })
                         })
                     })
@@ -108,35 +84,15 @@ function getTemps(callback) {
 
 function parseFinalData(criticalPoints, data, callback) {
     getLocations((response) => {
-        let locations = response.locations
-        let final_data = []
-
-        for (let i = 0; i < locations.length; i++) {
-            let location = locations[i]
-            let cp = { max: '-', min: '-' }
-            let temp = '-'
-
-            if (criticalPoints.has(location)) {
-                cp = criticalPoints.get(location)
-            }
-            if (data.has(location)) {
-                temp = data.get(location)
-            }
-            let row = {
-                location: location,
-                temperature: temp,
-                max: cp.max,
-                min: cp.min
-            }
-
-            final_data.push(row)
-        }
-        callback(final_data)
+        helper.parseFinalData(criticalPoints, data, response.locations,
+            (final_data) => {
+                callback(final_data)
+            })
     })
 }
 
 function getHottestAndColdest(callback) {
-    models.Observation.aggregate([{ $match: { date: { $gt: getDateDayAgo() } } }, // limit to 24h
+    models.Observation.aggregate([{ $match: { date: { $gt: helper.getDateDayAgo() } } }, // limit to 24h
     {
         $group: {
             _id: '$location',
@@ -222,34 +178,12 @@ function getLocationCoordinates(data, callback) {
     })
 }
 
-function checkInputValidity(data, callback) {
-    let location = data.location
-    let temperature = data.temperature
-    getLocations((response) => {
-        let locations = response.locations
-        if (
-            locations.indexOf(location) === -1
-            || location === ''
-            || isNaN(temperature)
-            || temperature === ''
-            || temperature == null
-            || temperature > 200
-            || temperature < -200
-        ) {
-            callback({ success: false, message: 'Input data not valid.' })
-        } else {
-            callback({ success: true })
-        }
-    })
-}
-
 function getMessage(callback) {
     callback({ message: 'Hello' })
 }
 
 module.exports = {
     saveTemperature,
-    getTemperature,
     getTemps,
     getMaxAndMin,
     getCoordinates,
