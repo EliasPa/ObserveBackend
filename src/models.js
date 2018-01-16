@@ -2,7 +2,6 @@ let mongoose = require('mongoose')
 
 let oservationSchema = mongoose.Schema({
     location: String,
-    timeZone: Number,
     temperature: Number,
     date: { type: Date, default: Date.now}
 });

@@ -15,7 +15,7 @@ let service = require('./database-service.js')
         }
 */
 router.get('/temperatures', (req, res) => {
-    service.getTemps((response) => {
+    service.getTemperatures((response) => {
         res.send(response)
     })
 })

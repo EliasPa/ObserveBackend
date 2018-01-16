@@ -61,7 +61,7 @@ function getMaxAndMin(callback) {
     })
 }
 
-function getTemps(callback) {
+function getTemperatures(callback) {
     models.Observation.aggregate([{ $group: { _id: '$location', temp: { $last: '$temperature' } } }],
         (err, result) => {
             if (err) {
@@ -190,7 +190,7 @@ function getMessage(callback) {
 
 module.exports = {
     saveTemperature,
-    getTemps,
+    getTemperatures,
     getMaxAndMin,
     getCoordinates,
     getLocationCoordinates,
