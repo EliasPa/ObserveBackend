@@ -4,7 +4,7 @@ let locations = require('./locations.js').locations
 let helper = require('./helper.js')
 
 function saveTemperature(data, callback) {
-    helper.checkInputValidity(data, (response) => {
+    checkInputValidity(data, (response) => {
         if (response.success) {
             let observation = new models.Observation({ location: data.location, temperature: parseFloat(data.temperature) })
             observation.save().then(() => {
@@ -19,6 +19,12 @@ function saveTemperature(data, callback) {
         } else {
             callback({ error: response.message, code: 501 })
         }
+    })
+}
+
+function checkInputValidity(data, callback){
+    getLocations((response) => {
+        helper.checkInputValidity(data, response.locations, (input_response) => callback(input_response))
     })
 }
 

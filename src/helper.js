@@ -1,22 +1,20 @@
-function checkInputValidity(data, callback) {
+function checkInputValidity(data, locations, callback) {
     let location = data.location
     let temperature = data.temperature
-    getLocations((response) => {
-        let locations = response.locations
-        if (
-            locations.indexOf(location) === -1
-            || location === ''
-            || isNaN(temperature)
-            || temperature === ''
-            || temperature == null
-            || temperature > 200
-            || temperature < -200
-        ) {
-            callback({ success: false, message: 'Input data not valid.' })
-        } else {
-            callback({ success: true })
-        }
-    })
+    if (
+        locations.indexOf(location) === -1
+        || location === ''
+        || isNaN(temperature)
+        || temperature === ''
+        || temperature == null
+        || temperature > 200
+        || temperature < -200
+    ) {
+        callback({ success: false, message: 'Input data not valid.' })
+    } else {
+        callback({ success: true })
+    }
+
 }
 
 function getDateDayAgo() {
@@ -30,19 +28,19 @@ function parseFinalData(criticalPoints, data, locations, callback) {
         let cp = { max: '-', min: '-' }
         let temp = '-'
 
-        if (criticalPoints.has(location)) 
+        if (criticalPoints.has(location))
             cp = criticalPoints.get(location)
-        
-        if (data.has(location)) 
+
+        if (data.has(location))
             temp = data.get(location)
-        
+
         let row = {
             location: location,
             temperature: temp,
             max: cp.max,
             min: cp.min
         }
-        
+
         final_data.push(row)
     }
     callback(final_data)
