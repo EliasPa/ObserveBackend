@@ -3,8 +3,6 @@
 This application is running on heroku and it works as the main API of my weather
 observing application found here: https://github.com/EliasPa/Observe .
 
-======
-
 <h2>Install guide</h2>
 
 To install:
@@ -12,8 +10,6 @@ To install:
 * clone the project
 * navigate to the root folder and run `npm install`
 * run `npm start` to start the server on port 3000
-
-======
 
 <h2>Documentation</h2>
 
