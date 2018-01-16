@@ -13,4 +13,16 @@ To install:
 
 <h2>Documentation</h2>
 
-The API documentation can be found in the comments of `observation-router.js`
+The API documentation for individual functions can be found in the comments of `observation-router.js`
+
+* When information is passed to the server through the temperature API, it will always be checked for its validity first.
+This way no invalid information will make its way into the database.
+
+* The API doesn't support adding locations dynamically, but the locations are seeded in the database separately,
+which makes adding more locations quick and easy.
+
+<h4>Technologies used</h4>
+
+* NodeJS
+* MongoDB and MongoLab
+* Heroku
