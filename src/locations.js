@@ -20,6 +20,7 @@ let locations = [
         coords: { lon: '25.092535,', lat: '55.156224' }
     }
 ]
+
 module.exports = {
     locations
 }
